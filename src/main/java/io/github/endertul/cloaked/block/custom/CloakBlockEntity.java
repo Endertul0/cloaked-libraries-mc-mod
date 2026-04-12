@@ -8,7 +8,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public class CloakBlockEntity extends BlockEntity {
 	private BlockState storedState;
