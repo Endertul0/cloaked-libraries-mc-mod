@@ -3,7 +3,7 @@
 	"package": "io.github.endertul.cloaked.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"CloakedMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

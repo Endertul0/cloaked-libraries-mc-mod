@@ -1,0 +1,7 @@
+{
+  "item.cloaked.decloaker": "Decloaker",
+  "item.cloaked.slow_cloaker": "Slow Cloaker",
+  "item.cloaked.quick_cloaker": "Quick Cloaker",
+  "block.cloaked.cloak": "Cloak Block",
+  "itemgroup.cloaked_tab": "Cloaked Libraries Tab"
+}
