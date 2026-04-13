@@ -1,7 +1,7 @@
-// 1.20	2026-04-11T20:36:07.4484047	Cloaked Libraries/Model Definitions
+// 1.20.2	2026-04-12T18:04:24.9419356	Cloaked Libraries/Model Definitions
 8229600a544b6631cb77b0b2d62e3e0d60faed38 assets\cloaked\models\item\slow_cloaker.json
-be9864471ea9c2450e79431b27603513f38b3068 assets\cloaked\models\item\cloak.json
 7d176e6506e216a1fb095d522aef76a924d7b2d1 assets\cloaked\models\item\quick_cloaker.json
+be9864471ea9c2450e79431b27603513f38b3068 assets\cloaked\models\item\cloak.json
 ed6e305b0b62ce099249bdaa357989f08a747b27 assets\cloaked\models\block\cloak.json
 b9ac279bf0bf79e2ae4b3826517cfe4a8c227d7e assets\cloaked\models\item\decloaker.json
 f86adddc9cde77c8f39416fe7802a3cf7b9d7b7c assets\cloaked\blockstates\cloak.json
