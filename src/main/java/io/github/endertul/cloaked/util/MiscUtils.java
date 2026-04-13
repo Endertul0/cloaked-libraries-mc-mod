@@ -24,7 +24,6 @@ import net.minecraft.world.WorldAccess;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class MiscUtils {
 	public static List<BlockPos> getNeighbors(BlockPos pos) {
@@ -60,10 +59,6 @@ public class MiscUtils {
 	
 	private static ActionResult cloak(ItemUsageContext context, boolean expand, BlockPos pos, int currentTally) {
 		World world = context.getWorld();
-		// Get neighbors
-		List<BlockPos> neighbors = getNeighbors(pos);
-		for (BlockPos listPos : neighbors) {
-		}
 		// BlockState before conversion
 		BlockState blockState = world.getBlockState(pos);
 		// BlockEntity before conversion
@@ -100,17 +95,21 @@ public class MiscUtils {
 				return ActionResult.FAIL;
 			}
 			
+			// Get all entities adjacent to the neighboring block
+			List<Entity> entities = world.getOtherEntities(null, new Box(pos.up().east().north(), pos.down().west().south()));
+			for (Entity entity : entities) {
+				if ((! (entity instanceof PlayerEntity)) && (! (entity instanceof EncodedEntity))) {
+					EncodedEntity ent = cloakEntity(entity).getEntity();
+				}
+			}
+			
+			// Get neighbors
+			List<BlockPos> neighbors = getNeighbors(pos);
 			for (BlockPos listPos : neighbors) {
 				if (! world.getBlockState(listPos).isOf(Blocks.AIR)) {
 					if (! world.getBlockState(listPos).isOf(ModBlocks.CLOAK)) {
 						currentTally++;
 						cloak(context, true, listPos, currentTally);
-					}
-				}
-				List<Entity> entities = world.getOtherEntities(null, new Box(listPos.up().east().north(), listPos.down().west().south()));
-				for (Entity entity : entities) {
-					if (! (entity instanceof PlayerEntity)) {
-						EncodedEntity ent = cloakEntity(entity).getEntity();
 					}
 				}
 			}
@@ -130,16 +129,11 @@ public class MiscUtils {
 		EncodedEntity encodedEntity = new EncodedEntity(ModEntities.ENCODED_ENTITY, world);
 		world.spawnEntity(encodedEntity);
 		encodedEntity.setPos(entity.getX(), entity.getY(), entity.getZ());
-		encodedEntity.setStoredNbt(entityNBT);
+		encodedEntity.setStoredNbt(entityNBT.toString());
+		encodedEntity.setStoredEntity(entity.getType());
 		
 		entity.kill();
 		entity.discard();
-		
-		if (encodedEntity.getStoredEntity().isPresent()) {
-			Cloaked.LOGGER.info(encodedEntity.getStoredEntity().get().getName().getString());
-		} else {
-			Cloaked.LOGGER.info(encodedEntity.getUuid().toString());
-		}
 		return new CloakEntityResult(ActionResult.SUCCESS, encodedEntity);
 	}
 	
@@ -149,6 +143,11 @@ public class MiscUtils {
 		}
 		CloakBlockEntity cloakBlockEntity = (CloakBlockEntity) world.getBlockEntity(pos);
 		BlockState decodedState = cloakBlockEntity.getStoredBlockState();
+		
+		if (decodedState == null) {
+			Cloaked.LOGGER.error("Decoded state is null! @ BlockPos {}!", pos.toShortString());
+			return ActionResult.SUCCESS;
+		}
 		
 		world.setBlockState(pos, decodedState, Block.NOTIFY_ALL);
 		if (cloakBlock.hasBlockEntity() && decodedState.hasBlockEntity()) {
@@ -173,15 +172,9 @@ public class MiscUtils {
 	}
 	
 	public static ActionResult decloakEntity(EncodedEntity encodedEntity) {
-		EntityType<?> type = EntityType.SQUID;
-		Optional<EntityType<?>> eType = encodedEntity.getStoredEntity();
-		if (eType.isPresent()) {
-			type = eType.get();
-			Cloaked.LOGGER.info(type.getUntranslatedName());
-		}
-		
 		World world = encodedEntity.getWorld();
-		Entity entity = type.create(world);
+		EntityType<?> eType = encodedEntity.getStoredEntity();
+		Entity entity = eType.create(world);
 		
 		entity.readNbt(encodedEntity.getStoredNbt());
 		entity.setPos(encodedEntity.getX(), encodedEntity.getY(), encodedEntity.getZ());

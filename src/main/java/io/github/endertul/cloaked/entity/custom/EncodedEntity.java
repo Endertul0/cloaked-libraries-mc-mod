@@ -1,5 +1,7 @@
 package io.github.endertul.cloaked.entity.custom;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.endertul.cloaked.Cloaked;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -10,15 +12,18 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.StringNbtReader;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
+import java.util.Objects;
 
 public class EncodedEntity extends PassiveEntity {
-	private static final TrackedData<NbtCompound> STORED_NBT = DataTracker.registerData(EncodedEntity.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
+	private static final TrackedData<String> STORED_ENTITY = DataTracker.registerData(EncodedEntity.class, TrackedDataHandlerRegistry.STRING);
+	private static final TrackedData<String> STORED_NBT_STRING = DataTracker.registerData(EncodedEntity.class, TrackedDataHandlerRegistry.STRING);
 	
 	public EncodedEntity(EntityType<? extends PassiveEntity> entityType, World world) {
 		super(entityType, world);
@@ -46,18 +51,35 @@ public class EncodedEntity extends PassiveEntity {
 	@Override
 	protected void initDataTracker() {
 		super.initDataTracker();
-		this.dataTracker.startTracking(STORED_NBT, new NbtCompound());
+		this.dataTracker.startTracking(STORED_ENTITY, EntityType.SQUID.getTranslationKey());
+		this.dataTracker.startTracking(STORED_NBT_STRING, "{}");
 	}
 	
 	public NbtCompound getStoredNbt() {
-		return this.dataTracker.get(STORED_NBT);
+		try {
+			return StringNbtReader.parse(this.dataTracker.get(STORED_NBT_STRING));
+		} catch (CommandSyntaxException e) {
+			Cloaked.LOGGER.error(e.getMessage());
+		}
+		
+		return new NbtCompound();
 	}
 	
-	public void setStoredNbt(NbtCompound entityNBT) {
-		this.dataTracker.set(STORED_NBT, entityNBT);
+	public void setStoredNbt(String s) {
+		this.dataTracker.set(STORED_NBT_STRING, s);
 	}
 	
-	public Optional<EntityType<?>> getStoredEntity() {
-		return EntityType.get(this.dataTracker.get(STORED_NBT).getString("id"));
+	public EntityType<?> getStoredEntity() {
+		String thisType = this.dataTracker.get(STORED_ENTITY);
+		for (EntityType<?> entityType : Registries.ENTITY_TYPE) {
+			if (Objects.equals(entityType.getTranslationKey(), thisType)) {
+				return entityType;
+			}
+		}
+		return EntityType.SQUID;
+	}
+	
+	public void setStoredEntity(EntityType<?> eType) {
+		this.dataTracker.set(STORED_ENTITY, eType.getTranslationKey());
 	}
 }
