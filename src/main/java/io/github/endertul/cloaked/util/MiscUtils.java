@@ -3,14 +3,12 @@ package io.github.endertul.cloaked.util;
 import io.github.endertul.cloaked.Cloaked;
 import io.github.endertul.cloaked.block.ModBlocks;
 import io.github.endertul.cloaked.block.custom.CloakBlockEntity;
-import io.github.endertul.cloaked.entity.ModEntities;
 import io.github.endertul.cloaked.entity.custom.EncodedEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemUsageContext;
@@ -57,8 +55,7 @@ public class MiscUtils {
 		return positions;
 	}
 	
-	private static ActionResult cloak(ItemUsageContext context, boolean expand, BlockPos pos, int currentTally) {
-		World world = context.getWorld();
+	public static ActionResult cloak(World world, boolean expand, BlockPos pos, int currentTally) {
 		// BlockState before conversion
 		BlockState blockState = world.getBlockState(pos);
 		// BlockEntity before conversion
@@ -99,7 +96,7 @@ public class MiscUtils {
 			List<Entity> entities = world.getOtherEntities(null, new Box(pos.up().east().north(), pos.down().west().south()));
 			for (Entity entity : entities) {
 				if ((! (entity instanceof PlayerEntity)) && (! (entity instanceof EncodedEntity))) {
-					EncodedEntity ent = cloakEntity(entity).getEntity();
+					EncodedEntity ent = CloakedCallbackSetup.convertToEncodedEntity(entity);
 				}
 			}
 			
@@ -109,7 +106,7 @@ public class MiscUtils {
 				if (! world.getBlockState(listPos).isOf(Blocks.AIR)) {
 					if (! world.getBlockState(listPos).isOf(ModBlocks.CLOAK)) {
 						currentTally++;
-						cloak(context, true, listPos, currentTally);
+						cloak(world, true, listPos, currentTally);
 					}
 				}
 			}
@@ -119,40 +116,30 @@ public class MiscUtils {
 	}
 	
 	public static ActionResult cloak(ItemUsageContext context, boolean expand, BlockPos pos) {
-		return cloak(context, expand, pos, 0);
+		return cloak(context.getWorld(), expand, pos, 0);
 	}
 	
-	public static CloakEntityResult cloakEntity(Entity entity) {
-		NbtCompound entityNBT = entity.writeNbt(new NbtCompound()).copy();
-		World world = entity.getWorld();
-		
-		EncodedEntity encodedEntity = new EncodedEntity(ModEntities.ENCODED_ENTITY, world);
-		world.spawnEntity(encodedEntity);
-		encodedEntity.setPos(entity.getX(), entity.getY(), entity.getZ());
-		encodedEntity.setStoredNbt(entityNBT.toString());
-		encodedEntity.setStoredEntity(entity.getType());
-		
-		entity.kill();
-		entity.discard();
-		return new CloakEntityResult(ActionResult.SUCCESS, encodedEntity);
-	}
-	
-	public static ActionResult decloak(WorldAccess world, BlockPos pos, BlockState cloakBlock, int currentTally) {
+	public static ActionResult decloak(WorldAccess world, BlockPos pos, int currentTally) {
 		if (currentTally > 256) {
 			return ActionResult.FAIL;
 		}
+		BlockState cloakBlock = world.getBlockState(pos);
+		if (! cloakBlock.isOf(ModBlocks.CLOAK)) {
+			return ActionResult.FAIL;
+		}
+		
 		CloakBlockEntity cloakBlockEntity = (CloakBlockEntity) world.getBlockEntity(pos);
 		BlockState decodedState = cloakBlockEntity.getStoredBlockState();
 		
 		if (decodedState == null) {
-			Cloaked.LOGGER.error("Decoded state is null! @ BlockPos {}!", pos.toShortString());
+			Cloaked.LOGGER.error("@MiscUtils:155 - Decoded state is null! @ BlockPos {}!", pos.toShortString());
 			return ActionResult.SUCCESS;
 		}
 		
 		world.setBlockState(pos, decodedState, Block.NOTIFY_ALL);
 		if (cloakBlock.hasBlockEntity() && decodedState.hasBlockEntity()) {
 			world.getBlockEntity(pos).readNbt(cloakBlockEntity.getStoredNbt());
-			Cloaked.LOGGER.info("decoding with NBT! as " + decodedState.getBlock().getName().toString());
+			Cloaked.LOGGER.info("@MiscUtils:162 - Decoding with NBT! as " + decodedState.getBlock().getName().toString());
 		}
 		List<BlockPos> positions = MiscUtils.getNeighbors(pos);
 		for (BlockPos listPos : positions) {
@@ -160,45 +147,14 @@ public class MiscUtils {
 			Block listBlock = listBlockState.getBlock();
 			if (listBlock == ModBlocks.CLOAK) {
 				currentTally++;
-				decloak(world, listPos, listBlockState, currentTally);
+				decloak(world, listPos, currentTally);
 			}
 		}
 		
 		return ActionResult.SUCCESS;
 	}
 	
-	public static ActionResult decloak(WorldAccess world, BlockPos pos, BlockState state) {
-		return decloak(world, pos, state, 0);
-	}
-	
-	public static ActionResult decloakEntity(EncodedEntity encodedEntity) {
-		World world = encodedEntity.getWorld();
-		EntityType<?> eType = encodedEntity.getStoredEntity();
-		Entity entity = eType.create(world);
-		
-		entity.readNbt(encodedEntity.getStoredNbt());
-		entity.setPos(encodedEntity.getX(), encodedEntity.getY(), encodedEntity.getZ());
-		
-		encodedEntity.kill();
-		encodedEntity.discard();
-		return ActionResult.SUCCESS;
-	}
-	
-	public static final class CloakEntityResult {
-		private final ActionResult actionResult;
-		private final EncodedEntity entity;
-		
-		public CloakEntityResult(ActionResult actionResult, EncodedEntity entity) {
-			this.actionResult = actionResult;
-			this.entity = entity;
-		}
-		
-		public ActionResult getActionResult() {
-			return actionResult;
-		}
-		
-		public EncodedEntity getEntity() {
-			return entity;
-		}
+	public static ActionResult decloak(ItemUsageContext context, BlockPos pos) {
+		return decloak(context.getWorld(), pos, 0);
 	}
 }

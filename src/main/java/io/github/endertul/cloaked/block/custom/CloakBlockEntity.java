@@ -10,9 +10,9 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
 
 public class CloakBlockEntity extends BlockEntity {
-	private BlockState storedState;
-	private Block storedBlock;
-	private NbtCompound storedNbt;
+	private BlockState storedState = Blocks.STONE.getDefaultState();
+	private Block storedBlock = Blocks.STONE;
+	private NbtCompound storedNbt = new NbtCompound();
 	
 	public CloakBlockEntity(BlockPos pos, BlockState state) {
 		super(ModBlockEntities.CLOAK_BLOCK_ENTITY, pos, state);

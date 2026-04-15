@@ -16,7 +16,6 @@ import net.minecraft.util.Identifier;
 public class ModBlocks {
 	
 	public static final Block CLOAK = registerBlock("cloak",
-		//new CloakBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).sounds(BlockSoundGroup.SCULK_SENSOR), ConvertToTypes.AIR, ConvertToTypes.SubType.NONE));
 		new CloakBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).sounds(BlockSoundGroup.SCULK_SENSOR)));
 	
 	private static Block registerBlock(String name, Block block) {

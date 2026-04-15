@@ -21,6 +21,9 @@
 		"fabric-datagen": [
 			"io.github.endertul.cloaked.CloakedDataGenerator"
 		],
+		"server": [
+			"io.github.endertul.cloaked.CloakedServer"
+		],
 		"client": [
 			"io.github.endertul.cloaked.CloakedClient"
 		]

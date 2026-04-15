@@ -11,6 +11,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 public class CloakedClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+		Cloaked.LOGGER.info("Initialized <{}>'s client!", Cloaked.MOD_ID);
+		
 		EntityRendererRegistry.register(ModEntities.ENCODED_ENTITY, EncodedEntityRenderer::new);
 		EntityModelLayerRegistry.registerModelLayer(ModModelLayers.ENCODED_ENTITY, EncodedEntityModel::getTexturedModelData);
 	}

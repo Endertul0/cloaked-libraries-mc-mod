@@ -13,17 +13,5 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 	
 	@Override
 	protected void configure(RegistryWrapper.WrapperLookup arg) {
-		//getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
-		//.add(ModBlocks.CLOAK);
-		
-		//getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL)
-		//.add(ModBlocks.RUBY_BLOCK);
-		
-		//getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
-		//.add(ModBlocks.RAW_RUBY_BLOCK)
-		//.add(ModBlocks.RUBY_ORE);
-		
-		//getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL)
-		//.add(ModBlocks.DEEPSLATE_RUBY_ORE);
 	}
 }

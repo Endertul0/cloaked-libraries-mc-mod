@@ -12,6 +12,7 @@ public class CloakBlock extends BlockWithEntity {
 		super(settings);
 	}
 	
+	//TODO: make this work lol
 	//@Override
 	//public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
 	//	return ModBlocks.CLOAK.asItem().getDefaultStack();
