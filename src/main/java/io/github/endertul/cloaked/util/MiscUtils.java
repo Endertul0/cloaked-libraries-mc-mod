@@ -93,7 +93,13 @@ public class MiscUtils {
 			}
 			
 			// Get all entities adjacent to the neighboring block
-			List<Entity> entities = world.getOtherEntities(null, new Box(pos.up().east().north(), pos.down().west().south()));
+			List<Entity> entities = world.getOtherEntities(
+				null,
+				new Box(
+					pos.up().east().north().toCenterPos(),
+					pos.down().west().south().toCenterPos()
+				)
+			);
 			for (Entity entity : entities) {
 				if ((! (entity instanceof PlayerEntity)) && (! (entity instanceof EncodedEntity))) {
 					EncodedEntity ent = CloakedCallbackSetup.convertToEncodedEntity(entity);
