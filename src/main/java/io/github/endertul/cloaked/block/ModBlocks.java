@@ -2,7 +2,6 @@ package io.github.endertul.cloaked.block;
 
 import io.github.endertul.cloaked.Cloaked;
 import io.github.endertul.cloaked.block.custom.CloakBlock;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -25,7 +24,7 @@ public class ModBlocks {
 	
 	private static Item registerBlockItem(String name, Block block) {
 		return Registry.register(Registries.ITEM, new Identifier(Cloaked.MOD_ID, name),
-			new BlockItem(block, new FabricItemSettings()));
+			new BlockItem(block, new Item.Settings()));
 	}
 	
 	public static void registerModBlocks() {

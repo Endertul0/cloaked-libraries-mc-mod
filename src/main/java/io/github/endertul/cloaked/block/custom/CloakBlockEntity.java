@@ -7,6 +7,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 
 public class CloakBlockEntity extends BlockEntity {
@@ -19,8 +20,8 @@ public class CloakBlockEntity extends BlockEntity {
 	}
 	
 	@Override
-	public void readNbt(NbtCompound nbt) {
-		super.readNbt(nbt);
+	public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+		super.readNbt(nbt, registryLookup);
 		if (nbt.contains("sstate") && nbt.contains("snbt")) {
 			this.storedState = (BlockState) nbt.get("sstate");
 			this.storedBlock = this.storedState.getBlock();
@@ -34,7 +35,7 @@ public class CloakBlockEntity extends BlockEntity {
 	}
 	
 	@Override
-	protected void writeNbt(NbtCompound nbt) {
+	protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
 		nbt.put("sstate", NbtHelper.fromBlockState(this.storedState));
 		nbt.put("snbt", storedNbt);
 	}

@@ -54,10 +54,10 @@ public class EncodedEntity extends PassiveEntity {
 	}
 	
 	@Override
-	protected void initDataTracker() {
-		super.initDataTracker();
-		this.dataTracker.startTracking(STORED_ENTITY, EntityType.SQUID.getTranslationKey());
-		this.dataTracker.startTracking(STORED_NBT_STRING, new NbtCompound().toString());
+	protected void initDataTracker(DataTracker.Builder builder) {
+		super.initDataTracker(builder);
+		builder.add(STORED_ENTITY, EntityType.SQUID.getTranslationKey());
+		builder.add(STORED_NBT_STRING, new NbtCompound().toString());
 	}
 	
 	public NbtCompound getStoredNbt() {

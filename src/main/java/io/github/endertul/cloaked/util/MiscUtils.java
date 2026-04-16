@@ -62,7 +62,7 @@ public class MiscUtils {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
 		NbtCompound blockEntityNBT = null;
 		if (blockState.hasBlockEntity() && blockEntity != null) {
-			blockEntityNBT = blockEntity.createNbtWithIdentifyingData();
+			blockEntityNBT = blockEntity.createNbtWithIdentifyingData(world.getRegistryManager());
 		}
 		
 		
@@ -71,7 +71,7 @@ public class MiscUtils {
 		if (blockEntity instanceof Inventory && blockEntityNBT != null) {
 			NbtCompound BENbt2 = blockEntityNBT.copy();
 			BENbt2.put("Items", new NbtList());
-			blockEntity.readNbt(BENbt2);
+			blockEntity.read(BENbt2, world.getRegistryManager());
 		}
 		
 		
@@ -144,7 +144,7 @@ public class MiscUtils {
 		
 		world.setBlockState(pos, decodedState, Block.NOTIFY_ALL);
 		if (cloakBlock.hasBlockEntity() && decodedState.hasBlockEntity()) {
-			world.getBlockEntity(pos).readNbt(cloakBlockEntity.getStoredNbt());
+			world.getBlockEntity(pos).read(cloakBlockEntity.getStoredNbt(), world.getRegistryManager());
 			Cloaked.LOGGER.info("@MiscUtils:162 - Decoding with NBT! as " + decodedState.getBlock().getName().toString());
 		}
 		List<BlockPos> positions = MiscUtils.getNeighbors(pos);
