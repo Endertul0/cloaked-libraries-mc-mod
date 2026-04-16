@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": {
+      "item": "minecraft:ender_pearl"
+    },
+    "S": {
+      "item": "minecraft:end_stone"
+    },
+    "Y": {
+      "item": "minecraft:ender_eye"
+    }
+  },
+  "pattern": [
+    "SES",
+    "EYE",
+    "SES"
+  ],
+  "result": {
+    "count": 1,
+    "id": "cloaked:decloaker"
+  }
+}
