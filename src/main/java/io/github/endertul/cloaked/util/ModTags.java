@@ -12,7 +12,7 @@ public class ModTags {
 		
 		
 		private static TagKey<Block> createTag(String name) {
-			return TagKey.of(RegistryKeys.BLOCK, new Identifier(Cloaked.MOD_ID, name));
+			return TagKey.of(RegistryKeys.BLOCK, Identifier.of(Cloaked.MOD_ID, name));
 		}
 	}
 	
@@ -20,7 +20,7 @@ public class ModTags {
 		
 		
 		private static TagKey<Item> createTag(String name) {
-			return TagKey.of(RegistryKeys.ITEM, new Identifier(Cloaked.MOD_ID, name));
+			return TagKey.of(RegistryKeys.ITEM, Identifier.of(Cloaked.MOD_ID, name));
 		}
 	}
 }

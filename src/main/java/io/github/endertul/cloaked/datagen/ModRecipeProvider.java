@@ -27,6 +27,6 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 			.input('E', Items.ENDER_PEARL)
 			.input('Y', Items.ENDER_EYE)
 			.criterion(hasItem(Items.ENDER_EYE), conditionsFromItem(Items.ENDER_EYE))
-			.offerTo(exporter, new Identifier(getRecipeName(ModItems.DECLOAKER)));
+			.offerTo(exporter, Identifier.of(getRecipeName(ModItems.DECLOAKER)));
 	}
 }

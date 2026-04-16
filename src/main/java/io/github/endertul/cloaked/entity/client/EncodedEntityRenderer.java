@@ -9,7 +9,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class EncodedEntityRenderer extends MobEntityRenderer<EncodedEntity, EncodedEntityModel<EncodedEntity>> {
-	private static final Identifier TEXTURE = new Identifier(Cloaked.MOD_ID, "textures/entity/encoded_entity.png");
+	private static final Identifier TEXTURE = Identifier.of(Cloaked.MOD_ID, "textures/entity/encoded_entity.png");
 	
 	public EncodedEntityRenderer(EntityRendererFactory.Context context) {
 		super(context, new EncodedEntityModel<>(context.getPart(ModModelLayers.ENCODED_ENTITY)), 0.6f);

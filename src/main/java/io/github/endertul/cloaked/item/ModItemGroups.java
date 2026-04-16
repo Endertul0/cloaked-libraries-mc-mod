@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 public class ModItemGroups {
 	public static final ItemGroup CLOAKED_TAB = Registry.register(Registries.ITEM_GROUP,
-		new Identifier(Cloaked.MOD_ID, "cloaked_tab"),
+		Identifier.of(Cloaked.MOD_ID, "cloaked_tab"),
 		FabricItemGroup.builder().displayName(Text.translatable("itemgroup.cloaked_tab"))
 			.icon(() -> new ItemStack(ModItems.DECLOAKER)).entries((displayContext, entries) -> {
 				entries.add(ModBlocks.CLOAK);
